@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  frontend:
+    container_name: frontend
+    image: service/front-end:latest
+    environment:
+      - APP_PORT=8080
+      - STATIC_URL=http://static:8000
+      - QUOTE_SERVICE_URL=http://quote:3000
+      - NEWSFEED_SERVICE_URL=http://newsfeed:3000
+      - NEWSFEED_SERVICE_TOKEN=T1&eWbYXNWG1w1^YGKDPxAWJ@^et^&kX
+    ports:
+      - "80:8080"
+    depends_on:
+      - static
+      - newsfeed
+      - quotes
+  static:
+    container_name: static
+    image: service/static:latest
+    expose:
+      - 8000
+  newsfeed:
+    container_name: newsfeed
+    image: service/newsfeed:latest
+    environment:
+      - APP_PORT=3000
+    expose:
+      - 3000
+  quote:
+    container_name: quote
+    image: service/quotes:latest
+    environment:
+      - APP_PORT=3000
+    expose:
+      - 3000

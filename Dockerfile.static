@@ -1,0 +1,7 @@
+FROM python:3.9
+
+WORKDIR /app
+
+COPY /front-end /app/front-end
+
+CMD [ "python", "front-end/public/serve.py" ]

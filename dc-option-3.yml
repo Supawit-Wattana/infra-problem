@@ -1,0 +1,108 @@
+version: '3.9'
+services:
+  main-rp:
+    container_name: nginx-rp
+    image: nginx:1.19-alpine
+    volumes:
+      - ./nginx/nginx.frontend.nossl.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend0
+      - frontend1
+  frontend0:
+    container_name: frontend0
+    image: service/front-end:latest
+    environment:
+      - APP_PORT=8080
+      - STATIC_URL=http://nginx-rp-static
+      - QUOTE_SERVICE_URL=http://lb-quote:3000
+      - NEWSFEED_SERVICE_URL=http://lb-newsfeed:3000
+      - NEWSFEED_SERVICE_TOKEN=T1&eWbYXNWG1w1^YGKDPxAWJ@^et^&kX
+    expose:
+      - 8080
+    depends_on:
+      - static
+      - lb-newsfeed
+      - lb-quote
+  frontend1:
+    container_name: frontend1
+    image: service/front-end:latest
+    environment:
+      - APP_PORT=8080
+      - STATIC_URL=http://static:8000
+      - QUOTE_SERVICE_URL=http://quote:3000
+      - NEWSFEED_SERVICE_URL=http://newsfeed:3000
+      - NEWSFEED_SERVICE_TOKEN=T1&eWbYXNWG1w1^YGKDPxAWJ@^et^&kX
+    expose:
+      - 8080
+    depends_on:
+      - static
+      - lb-newsfeed
+      - lb-quote
+  static-rp:
+    container_name: nginx-rp-static
+    image: nginx:1.19-alpine
+    volumes:
+      - ./nginx/nginx.static.conf:/etc/nginx/nginx.conf
+    expose:
+      - 80
+  static:
+    container_name: static
+    image: service/static:latest
+    expose:
+      - 8000
+  lb-newsfeed:
+    container_name: nginx-lb-newsfeed
+    image: nginx:1.19-alpine
+    volumes:
+      - ./nginx/nginx.loadbalance.conf:/etc/nginx/templates/default.conf.template
+    environment:
+      - SERV0=newsfeed0
+      - SERV1=newsfeed1
+    expose:
+      - 3000
+    depends_on:
+      - newsfeed0
+      - newsfeed1
+  newsfeed0:
+    container_name: newsfeed0
+    image: service/newsfeed:latest
+    environment:
+      - APP_PORT=3000
+    expose:
+      - 3000
+  newsfeed1:
+    container_name: newsfeed1
+    image: service/newsfeed:latest
+    environment:
+      - APP_PORT=3000
+    expose:
+      - 3000
+  lb-quote:
+    container_name: nginx-lb-quote
+    image: nginx:1.19-alpine
+    volumes:
+      - ./nginx/nginx.loadbalance.conf:/etc/nginx/templates/default.conf.template
+    environment:
+      - SERV0=quote0
+      - SERV1=quote1
+    expose:
+      - 3000
+    depends_on:
+      - quote0
+      - quote1
+  quote0:
+    container_name: quote0
+    image: service/quotes:latest
+    environment:
+      - APP_PORT=3000
+    expose:
+      - 3000
+  quote1:
+    container_name: quote1
+    image: service/quotes:latest
+    environment:
+      - APP_PORT=3000
+    expose:
+      - 3000
