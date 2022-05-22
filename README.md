@@ -65,9 +65,9 @@ All the apps take environment variables to configure them and expose the URL `/p
 
 ## Deployment
 
-Deploy Option 1: `make deploy-1` For simple deployment and `make clean-1` For clean kill the deployment.
-Deploy Option 2: `make deploy-2` For nginx config to reverse proxy and loadbalancer deployment with ssl and `make clean-2` For clean kill the deployment.
-Deploy Option 3: `make deploy-3` For nginx config to reverse proxy and loadbalancer deployment with no ssl and `make clean-3` For clean kill the deployment.
-Deploy Option 4: Before deployment you must build with `make clean all` then use `make deploy-4` For serve all apps in simple deployment and `make clean-4` For clean kill the deployment.
+* Deploy Option 1: `make deploy-1` For simple deployment and `make clean-1` For clean kill the deployment.
+* Deploy Option 2: `make deploy-2` For nginx config to reverse proxy and loadbalancer deployment with ssl and `make clean-2` For clean kill the deployment.
+* Deploy Option 3: `make deploy-3` For nginx config to reverse proxy and loadbalancer deployment with no ssl and `make clean-3` For clean kill the deployment.
+* Deploy Option 4: Before deployment you must build with `make clean all` then use `make deploy-4` For serve all apps in simple deployment and `make clean-4` For clean kill the deployment.
 
 
